@@ -1,72 +1,44 @@
-let randomNumber = Math.floor(Math.random() * 100) + 1;
+let computerChoice;
+let playerChoice;
 
-const guesses = document.querySelector(".guesses");
-const lastResult = document.querySelector(".lastResult");
-const lowOrHi = document.querySelector(".lowOrHi");
-
-const guessSubmit = document.querySelector(".guessSubmit");
-const guessField = document.querySelector(".guessField");
-
-let guessCount = 0;
-let resetButton;
-
-function checkGuess() {
-    console.log("hi");
-    let userGuess = Number(guessField.value);
-    if (guessCount === 0) {
-        guesses.textContent = "Previous guesses: ";
-    }
-
-    guesses.textContent += userGuess + " ";
-
-    if (userGuess === randomNumber) {
-        lastResult.textContent = "Congrats! You got it right!";
-        lowOrHi.textContent = "";
-        setGameOver();
-    } else if (guessCount === 9) {
-        lastResult.textContent = "!!!GAME OVER!!!";
-        lowOrHi.textContent = "";
-        setGameOver();
+function computerPlay() {
+    const randomNumber = Math.random() * 30;
+    
+    if (randomNumber > 20) {
+        computerChoice = "rock";
+        console.log(`Your opponent chose ${computerChoice}!`);
+    } else if (randomNumber > 10) {
+        computerChoice = "paper";
+        console.log(`Your opponent chose ${computerChoice}!`);
     } else {
-        lastResult.textContent = "Wrong!";
-        if (userGuess < randomNumber) {
-            lowOrHi.textContent = "Last guess was too low!";
-        } else {
-            lowOrHi.textContent = "Last guess was too high!";
-        }
+        computerChoice = "scissors";
+        console.log(`Your opponent chose ${computerChoice}!`);
     }
-
-    guessCount++;
-    guessField.value = "";
-    guessField.focus();
 }
 
-guessSubmit.addEventListener("click", checkGuess);
+function renderResults() {
+    if (playerChoice.toLowerCase() === "rock" && computerChoice.toLowerCase() === "scissors" || playerChoice.toLowerCase() === "paper" && computerChoice.toLowerCase() === "rock" || playerChoice.toLowerCase() === "scissors" && computerChoice.toLowerCase() === "paper") {
+        console.log("You win!!!");
+    } else if (playerChoice.toLowerCase() === "rock" && computerChoice.toLowerCase() === "paper" || playerChoice.toLowerCase() === "paper" && computerChoice.toLowerCase() === "scissors" || playerChoice.toLowerCase() === "scissors" && computerChoice.toLowerCase() === "rock") {
+        console.log("You lose!!!");
+    } else {
+        console.log("Wow! You and your opponent both tied!");
+    }
+} 
 
-function setGameOver() {
-    guessField.disabled = true;
-    guessSubmit.disabled = true;
-    resetButton = document.createElement("button")
-    resetButton.textContent = "Start new game";
-    document.body.append(resetButton);
-    resetButton.addEventListener("click", resetGame);
+function playAgain() {
+    let rematch = "";
+    rematch = prompt("Want to play again?", "Y/N");
+    if (rematch.toUpperCase() === "Y") {
+        rematch = "";
+        playGame();
+    }
 }
 
-function resetGame() {
-    guessCount = 0;
-
-    const resetParas = document.querySelectorAll(".resultParas p");
-    for (let i = 0; i < resetParas.length; i ++) {
-        resetParas[i].textContent = "";
-        console.log[i];
-    }
-
-    resetButton.parentNode.removeChild(resetButton);
-
-    guessField.disabled = false;
-    guessSubmit.disabled = false;
-    guessField.value = "";
-    guessField.focus();
-
-    randomNumber = Math.floor(Math.random() * 100) + 1;
+function playGame() {
+    playerChoice = prompt("Let's play rock, paper, scissors! Enter your choice below: ", "Choose rock, paper, or scissors");
+    console.log(`You chose ${playerChoice}!`);
+    computerPlay();
+    renderResults();
+    playAgain();
 }
